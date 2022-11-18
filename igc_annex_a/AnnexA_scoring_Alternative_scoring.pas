@@ -58,7 +58,7 @@ const UseHandicaps = 2;   // set to: 0 to disable handicapping, 1 to use handica
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
-  Pm, Pdm, Pvm, Pn, F, Fcr, Sp0, Spm, Day: Double;
+  Pm, Pdm, Pvm, Pn, F, Fcr, Sp0, Spm, Day: Double;  
 
   D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S  : double;
   
@@ -204,6 +204,7 @@ begin
   N := 0;  // Number of pilots having had a competition launch
   n1 := 0;  // Number of pilots with Marking distance greater than Dm - normally 100km
   n4 := 0;  // Number of competitors who achieve a Handicapped Distance (Dh) of at least Dm/2
+  n3 := 0; //ADDED; The number of competitors who reached the goal
   Hmin := 100000;  // Lowest Handicap of all competitors in the class
   
   for i:=0 to GetArrayLength(Pilots)-1 do
