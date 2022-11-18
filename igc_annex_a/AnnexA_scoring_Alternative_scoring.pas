@@ -204,7 +204,7 @@ begin
   N := 0;  // Number of pilots having had a competition launch
   n1 := 0;  // Number of pilots with Marking distance greater than Dm - normally 100km
   n4 := 0;  // Number of competitors who achieve a Handicapped Distance (Dh) of at least Dm/2
-  n3 := 0; //ADDED; The number of competitors who reached the goal
+  n3 := 0; // The number of competitors who reached the goal
   Hmin := 100000;  // Lowest Handicap of all competitors in the class
   
   for i:=0 to GetArrayLength(Pilots)-1 do
@@ -237,6 +237,7 @@ begin
       if Pilots[i].dis*Hmin/Pilots[i].Hcap >= Dm Then n1 := n1+1;  // Competitors who have achieved at least Dm
       if Pilots[i].dis*Hmin/Pilots[i].Hcap >= ( Dm / 2.0) Then n4 := n4+1;  // Number of competitors who achieve a Handicapped Distance (Dh) of at least Dm/2
       if Pilots[i].takeoff >= 0 Then N := N+1;    // Number of competitors in the class having had a competition launch that Day
+      If Pilots[i].sfinish >= 0 then n3 := n3 + 1 // The number of competitors who reached the goal
     end;
   end;
   if N=0 Then begin
