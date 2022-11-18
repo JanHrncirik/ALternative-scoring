@@ -58,9 +58,9 @@ const UseHandicaps = 2;   // set to: 0 to disable handicapping, 1 to use handica
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
-  Pm, Pdm, Pvm, Pn, F, Fcr, Day: Double;
+  Pm, Pdm, Pvm, Pn, F, Fcr, Sp0, Spm, Day: Double;
 
-  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, S : double;
+  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S  : double;
   
   PmaxDistance, PmaxTime : double;
   
