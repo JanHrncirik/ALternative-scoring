@@ -64,7 +64,7 @@ var
   
   PmaxDistance, PmaxTime : double;
   
-  i,j : integer;
+  i,j,k : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
   AAT : boolean;
   Auto_Hcaps_on : boolean;
