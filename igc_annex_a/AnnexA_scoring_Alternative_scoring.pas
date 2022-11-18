@@ -294,24 +294,7 @@ begin
   // Day Factor
   F := Pm/1000;
   if F>1 Then F := 1;
-  
-  // Number of competitors who have achieved at least 2/3 of best speed for the day Vo
-  n2 := 0;
-  // Number of finishers, regardless of speed
-  n3 := 0;
-
-  for i:=0 to GetArrayLength(Pilots)-1 do
-  begin
-    if not Pilots[i].isHC Then
-    begin
-      n3 := n3+1;
-      if Pilots[i].speed*Hmin/Pilots[i].Hcap > (2.0/3.0*Vo) Then
-      begin
-        n2 := n2+1;
-      end;
-    end;
-  end;
-  
+    
   // Completion Ratio Factor
   Fcr := 1;
   if n1 > 0 then
