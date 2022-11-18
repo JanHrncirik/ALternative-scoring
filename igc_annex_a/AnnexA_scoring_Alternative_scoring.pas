@@ -292,7 +292,7 @@ begin
   Pm := MinValue( PmaxDistance, PmaxTime, 1000.0 );
   
   // Day Factor
-  F := 1.25* n1/N;
+  F := Pm/1000;
   if F>1 Then F := 1;
   
   // Number of competitors who have achieved at least 2/3 of best speed for the day Vo
