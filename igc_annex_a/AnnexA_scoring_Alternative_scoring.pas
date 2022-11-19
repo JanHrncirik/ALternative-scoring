@@ -378,7 +378,6 @@ begin
   Info1 := Info1 + 'Maximum Points: '+IntToStr(Round(Pm));
   Info1 := Info1 + ', F = '+FormatFloat('0.000',F);
   Info1 := Info1 + ', Fcr = '+FormatFloat('0.000',Fcr);
-  Info1 := Info1 + ', Max speed pts: '+IntToStr(Round(Pvm));
 
   if (n1/N) <= 0.25 then
     Info1 := 'Day not valid - rule 8.2.1b';
