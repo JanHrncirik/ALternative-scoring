@@ -316,7 +316,7 @@ begin
     // For any finisher
     if Pilots[i].finish > 0 Then
     begin
-      Pv := 1000 * ((Pilots[i].speed*Hmin/Pilots[i].Hcap)/V0);
+      Pv := 1000 * ((Pilots[i].speed*Hmin/Pilots[i].Hcap)/Vo);
       Pd := 750*((Pilots[i].dis*Hmin/Pilots[i].Hcap)/D0);
     end
     else
