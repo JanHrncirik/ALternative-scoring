@@ -330,6 +330,36 @@ begin
     Pilots[i].Points := F*Fcr*MaxValue( Pv, Pd);
   end;
   
+ //CALCULATION of Sp0- points of the winner and Spm- average points without those who have 0 points
+  Sp0 := 0;
+  Spm := 0;
+  k   := 0;
+  for i:=0 to GetArrayLength(Pilots)-1 do
+  begin
+    if Sp0 < Pilots[i].Points then Sp0 := Pilots[i].Points;
+    if Pilots[i].Points > 0 then 
+    begin
+      k := k + 1;
+      Spm := Spm + Pilots[i].Points;
+    end;
+  end;
+  
+  // CALCULATION of competitor's points with correction for average points and penalty  
+  for i:=0 to GetArrayLength(Pilots)-1 do
+  begin
+   if Sp0 = Spm then
+      begin
+        Pilots[i].Points := Pilots[i].Points - Pilots[i].Penalty;
+        Info1 := 'Warning: Sp0 = Spm';
+      end
+    Else
+     begin
+        Pilots[i].Points := Pilots[i].Points * MinValue(1,200/(Sp0-Spm),10000) - Pilots[i].Penalty;
+        Pilots[i].Points := Round(Pilots[i].Points);
+     end;
+  end;
+
+  if k > 0 then Spm := Spm/k;
   // Data which is presented in the score-sheets
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
