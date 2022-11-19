@@ -401,7 +401,7 @@ begin
   Info3 := Info3 + ', n3: ' + IntToStr(Round(n3));
   Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + 'km';
   Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + 'km/h';
-  Info3 := Info3 + ', T0: ' + FormatFloat('0.000',T0/3600) + 'h';
+  Info3 := Info3 + ', T0: ' + GetTimeString (T0) + 'h';
   
 // Give out PEV as Warnings
 // PevStartTimeBuffer is set to 30
