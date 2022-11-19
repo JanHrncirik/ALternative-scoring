@@ -327,7 +327,7 @@ begin
     end;
     
     // Pilot's score
-    Pilots[i].Points := Round( F*Fcr*(Pd+Pv) - Pilots[i].Penalty );
+    Pilots[i].Points := F*Fcr*MaxValue( Pv, Pd);
   end;
   
   // Data which is presented in the score-sheets
