@@ -300,8 +300,7 @@ begin
     Fcr := 1.2*(n3/n1)+0.6;
   if Fcr>1 Then Fcr := 1;
 
-  Pvm := 2.0/3.0 * (n2/N) * Pm;  // maximum available Speed Points for the Day
-  Pdm := Pm-Pvm;                 // maximum available Distance Points for the Day
+
   
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
