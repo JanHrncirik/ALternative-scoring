@@ -307,15 +307,14 @@ begin
     // For any finisher
     if Pilots[i].finish > 0 Then
     begin
-      Pv := Pvm * (Pilots[i].speed*Hmin/Pilots[i].Hcap - 2.0/3.0*Vo)/(1.0/3.0*Vo);
-      if Pilots[i].speed*Hmin/Pilots[i].Hcap < (2.0/3.0*Vo) Then Pv := 0;
-      Pd := Pdm;
+      Pv := 1000 * ((Pilots[i].speed*Hmin/Pilots[i].Hcap)/V0);
+      Pd := 750*((Pilots[i].dis*Hmin/Pilots[i].Hcap)/D0);
     end
     else
     //For any non-finisher
     begin
       Pv := 0;
-      Pd := Pdm * (Pilots[i].dis*Hmin/Pilots[i].Hcap/D0);
+      Pd := 750 * (Pilots[i].dis*Hmin/Pilots[i].Hcap/D0);
     end;
     
     // Pilot's score
