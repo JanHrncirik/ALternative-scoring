@@ -413,7 +413,6 @@ begin
   // for debugging:
   Info3 := Info3 +' N: ' + IntToStr(Round(N));
   Info3 := Info3 + ', n1: ' + IntToStr(Round(n1));
-  Info3 := Info3 + ', n2: ' + IntToStr(Round(n2));
   Info3 := Info3 + ', n3: ' + IntToStr(Round(n3));
   Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + 'km';
   Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + 'km/h';
