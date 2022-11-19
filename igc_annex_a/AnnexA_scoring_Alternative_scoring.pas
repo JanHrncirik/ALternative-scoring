@@ -86,6 +86,15 @@ begin
   MinValue := m;
 end;
 
+Function MaxValue( a,b : double ) : double;
+var m : double;
+begin
+  m := a;
+  If b > m Then m := b;
+
+  MaxValue := m;
+end;
+
 Function GetTimeString (time: integer) : string;    // converts integer time in seconds to "hh:mm:ss" string
 var
   h,min,sec: Integer;
