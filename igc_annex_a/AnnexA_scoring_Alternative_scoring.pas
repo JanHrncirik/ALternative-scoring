@@ -204,7 +204,6 @@ begin
   N := 0;  // Number of pilots having had a competition launch
   n1 := 0;  // Number of pilots with Marking distance greater than Dm - normally 100km
   n4 := 0;  // Number of competitors who achieve a Handicapped Distance (Dh) of at least Dm/2
-  n3 := 0; // The number of competitors who reached the goal
   Hmin := 100000;  // Lowest Handicap of all competitors in the class
   
   for i:=0 to GetArrayLength(Pilots)-1 do
@@ -298,7 +297,7 @@ begin
   // Completion Ratio Factor
   Fcr := 1;
   if n1 > 0 then
-    Fcr := 1.2*(n2/n1)+0.6;
+    Fcr := 1.2*(n3/n1)+0.6;
   if Fcr>1 Then Fcr := 1;
 
   Pvm := 2.0/3.0 * (n2/N) * Pm;  // maximum available Speed Points for the Day
