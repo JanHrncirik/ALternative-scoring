@@ -362,7 +362,6 @@ begin
   end;
 
 
-  if k > 0 then Spm := Spm/k;
   // Data which is presented in the score-sheets
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
