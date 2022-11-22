@@ -382,7 +382,7 @@ begin
   Info1 := Info1 + ', Fcr = '+FormatFloat('0.000',Fcr);
   Info1 := Info1 + ',Sp0 = '+FormatFloat('# #00',Sp0);
   Info1 := Info1 + ',Spm = '+FormatFloat('# #00',Spm);
-
+  Info1 := Info1 + ', k = '+FormatFloat('###',k);
 
   if (n1/N) <= 0.25 then
     Info1 := 'Day not valid - rule 8.2.1b';
