@@ -1,5 +1,5 @@
 Program IGC_Annex_A_scoring_2023;
-// Version 1.00 Date November 18, 2022 by Jan Hrncirik
+// Version 1.00 Date November 18, 2022 by Jan Hrncirik; Debuged November 26, 2022
 //   .Alternative Scoring – Gliding, FOR NATIONAL, CONTINENTAL, AND WORLD GLIDING CHAMPIONSHIPS CLASS D (gliders) Including Class DM (motorgliders). 7 February 2022
 // Collaborate on writing scripts at Github:
 // https://github.com/naviter/seeyou_competition_scripts/
