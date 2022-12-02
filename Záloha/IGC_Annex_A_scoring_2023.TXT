@@ -1,17 +1,9 @@
 Program IGC_Annex_A_scoring_2023;
-// Version 10.00 Date December 8, 2022 by Jan Hrncirik;
-// 
+// Version 1.00 Date November 18, 2022 by Jan Hrncirik; Debuged November 26, 2022
 //   .Alternative Scoring – Gliding, FOR NATIONAL, CONTINENTAL, AND WORLD GLIDING CHAMPIONSHIPS CLASS D (gliders) Including Class DM (motorgliders). 7 February 2022
-// 
 // Collaborate on writing scripts at Github:
 // https://github.com/naviter/seeyou_competition_scripts/
-// Version 10.00
-// Added penalty seconds for higher starting speed, for exceeding the starting height and for exceeding the permitted start-finish height loss
-// . support for penalty seconds
-// . enter "MaxStSpd=150" in DayTag for taking penalty seconds for exceeding the GPS start speed 150 km/h.
-// . enter "MaxStAlt=1700" in DayTag for exceeding the start height.
-// . enter "MaxFinishIsBelowSt=1200" in DayTag for exceeding the maximum "Finish is below start for:"
-// . example: "PEVWaitTime=10 PEVStartWindow=10 MaxStSpd=150 MaxStAlt=1700 MaxFinishIsBelowSt=1200"
+//
 // Version 9.02, Date 17.07.2022 by Andrej Kolar
 //   . Reintroduced Hmin parameter to be able to calculate results for Handicaps between 80-130
 // Version 9.01, Date 08.07.2022 by Andrej Kolar
@@ -62,7 +54,7 @@ Program IGC_Annex_A_scoring_2023;
 
 const UseHandicaps = 2;   // set to: 0 to disable handicapping, 1 to use handicaps, 2 is auto (handicaps only for club and multi-seat)
       PevStartTimeBuffer = 30; // PEV which is less than PevStartTimeBuffer seconds later than last PEV will be ignored and not counted
-      UsePenaltySeconds = 1; //If set to 1, it will use penalty seconds, otherwise it will only give warnings   
+   
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
