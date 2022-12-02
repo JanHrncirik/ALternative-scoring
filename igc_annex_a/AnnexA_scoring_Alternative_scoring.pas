@@ -71,6 +71,8 @@ var
   D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S  : double;
   
   PmaxDistance, PmaxTime : double;
+
+  MaxStAlt, MaxFinishIsBelowSt : double;
   
   i,j,k : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
