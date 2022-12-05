@@ -270,9 +270,9 @@ begin
 // Correction of speed and flight time with penalty seconds
 if UsePenaltySeconds = 1 then
 begin
-  MaxStSpd := ReadDayTagParameter ('MAXSTSPD', 0) 
-  MaxStAlt := ReadDayTagParameter ('MaxStAlt', 0)
-  MaxFinishIsBelowSt := ReadDayTagParameter ('MAXFINISHISBELOWST', 0)
+  MaxStSpd := ReadDayTagParameter ('MAXSTSPD', 0); 
+  MaxStAlt := ReadDayTagParameter ('MaxStAlt', 0);
+  MaxFinishIsBelowSt := ReadDayTagParameter ('MAXFINISHISBELOWST', 0);
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
     DStSpd := 0;
@@ -286,7 +286,7 @@ begin
 		    begin
 		      DStSpd := Pilots[i].Fixes[j].Gsp - MaxStSpd;
 		      DPStAlt := Pilots[i].Fixes[j].AltQnh - MaxStAlt;
-          DFinishIsBelowSt := MaxFinishIsBelowSt -(Pilots[i].Fixes[j].AltQnh - Pilot[i].finishAlt)
+          DFinishIsBelowSt := MaxFinishIsBelowSt -(Pilots[i].Fixes[j].AltQnh - Pilot[i].finishAlt);
           break; // end the for j := loop
 	      end;
       end;
