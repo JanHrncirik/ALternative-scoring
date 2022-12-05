@@ -278,7 +278,7 @@ begin
     DStSpd := 0;
     DPStAlt := 0;
     DFinishIsBelowSt := 0;
-    if Pilot[i].start and Pilot[i].finish
+    if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) then
     begin
 	    for j := 0 to GetArrayLength(Pilots[i].Fixes)-1 do
 	    begin
@@ -286,24 +286,24 @@ begin
 		    begin
 		      DStSpd := Pilots[i].Fixes[j].Gsp - MaxStSpd;
 		      DPStAlt := Pilots[i].Fixes[j].AltQnh - MaxStAlt;
-          DFinishIsBelowSt := MaxFinishIsBelowSt -(Pilots[i].Fixes[j].AltQnh - Pilot[i].finishAlt);
+          DFinishIsBelowSt := MaxFinishIsBelowSt -(Pilots[i].Fixes[j].AltQnh - Pilots[i].finishAlt);
           break; // end the for j := loop
 	      end;
       end;
       if DStSpd > 0 then
       begin
-        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DStspd * PStSpd);
-        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DStSpd = ' + IntToStr(Integer(DStSpd));
+        Pilots[i].tfinish := Pilots[i].tfinish + Int(DStspd * PStSpd);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DStSpd = ' + IntToStr(Int(DStSpd));
       end;
       if DPStAlt > 0 then
       begin
-        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DPStAlt * PStAlt);
-        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DPStAlt = ' + IntToStr(Integer(DPStAlt));
+        Pilots[i].tfinish := Pilots[i].tfinish + Int(DPStAlt * PStAlt);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DPStAlt = ' + IntToStr(Int(DPStAlt));
       end;
       if DFinishIsBelowSt > 0 then
       begin
-        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DFinishIsBelowSt * PFinishIsBelowSt);
-        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' D Start-Finis alt. = ' + IntToStr(Integer(DFinishIsBelowSt));
+        Pilots[i].tfinish := Pilots[i].tfinish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' D Start-Finis alt. = ' + IntToStr(Int(DFinishIsBelowSt));
       end;      
     end;
   end;
