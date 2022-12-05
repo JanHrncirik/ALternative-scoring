@@ -60,9 +60,12 @@ Program IGC_Annex_A_scoring_2023;
 // Version 3.20
 //   . added warnings when Exit 
 
-const UseHandicaps = 2;   // set to: 0 to disable handicapping, 1 to use handicaps, 2 is auto (handicaps only for club and multi-seat)
-      PevStartTimeBuffer = 30; // PEV which is less than PevStartTimeBuffer seconds later than last PEV will be ignored and not counted
-      UsePenaltySeconds = 1; //If set to 1, it will use penalty seconds, otherwise it will only give warnings   
+const UseHandicaps = 2;         // set to: 0 to disable handicapping, 1 to use handicaps, 2 is auto (handicaps only for club and multi-seat)
+      PevStartTimeBuffer = 30;  // PEV which is less than PevStartTimeBuffer seconds later than last PEV will be ignored and not counted
+      UsePenaltySeconds = 1;    // If set to 1, it will use penalty seconds, otherwise it will only give warnings   
+      PStSpd=5                  // +5 s/ 1 km/h for exceeding the maximum starting speed
+      PStAlt=2                  // +2 s/ 1 m for exceeding the maximum start altitud
+      PMaxFinishIsBelowSt=1     // +2 s/ 1 m for exceeding the maximum "Finish is below start for"
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
