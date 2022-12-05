@@ -65,7 +65,7 @@ const UseHandicaps = 2;         // set to: 0 to disable handicapping, 1 to use h
       UsePenaltySeconds = 1;    // If set to 1, it will use penalty seconds, otherwise it will only give warnings   
       PStSpd=5                  // +5 s/ 1 km/h for exceeding the maximum starting speed
       PStAlt=2                  // +2 s/ 1 m for exceeding the maximum start altitud
-      PMaxFinishIsBelowSt=1     // +2 s/ 1 m for exceeding the maximum "Finish is below start for"
+      PFinishIsBelowSt=1     // +2 s/ 1 m for exceeding the maximum "Finish is below start for"
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
@@ -75,7 +75,7 @@ var
   
   PmaxDistance, PmaxTime : double;
 
-  MaxStAlt, MaxFinishIsBelowSt : double;
+  MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
   i,j,k : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
@@ -267,6 +267,48 @@ begin
   	Exit;
   end;
   
+// Correction of speed and flight time with penalty seconds
+if UsePenaltySeconds = 1 then
+begin
+  MaxStSpd := ReadDayTagParameter ('MAXSTSPD', 0) 
+  MaxStAlt := ReadDayTagParameter ('MaxStAlt', 0)
+  MaxFinishIsBelowSt := ReadDayTagParameter ('MAXFINISHISBELOWST', 0)
+  for i:=0 to GetArrayLength(Pilots)-1 do
+  begin
+    DStSpd := 0;
+    DPStAlt := 0;
+    DFinishIsBelowSt := 0;
+    if Pilot[i].start and Pilot[i].finish
+    begin
+	    for j := 0 to GetArrayLength(Pilots[i].Fixes)-1 do
+	    begin
+	      if Pilots[i].Fixes[j].Tsec = Pilots[i].start Then
+		    begin
+		      DStSpd := Pilots[i].Fixes[j].Gsp - MaxStSpd;
+		      DPStAlt := Pilots[i].Fixes[j].AltQnh - MaxStAlt;
+          DFinishIsBelowSt := MaxFinishIsBelowSt -(Pilots[i].Fixes[j].AltQnh - Pilot[i].finishAlt)
+          break; // end the for j := loop
+	      end;
+      end;
+      if DStSpd > 0 then
+      begin
+        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DStspd * PStSpd);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DStSpd = ' + IntToStr(Integer(DStSpd));
+      end;
+      if DPStAlt > 0 then
+      begin
+        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DPStAlt * PStAlt);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' DPStAlt = ' + IntToStr(Integer(DPStAlt));
+      end;
+      if DFinishIsBelowSt > 0 then
+      begin
+        Pilots[i].tfinish := Pilots[i].tfinish + Integer(DFinishIsBelowSt * PFinishIsBelowSt);
+        Pilots[i].PilotTag := Pilots[i].PilotTag  + ' D Start-Finis alt. = ' + IntToStr(Integer(DFinishIsBelowSt));
+      end;      
+    end;
+  end;
+end;
+
   D0 := 0;
   T0 := 0;
   Vo := 0;
@@ -414,6 +456,10 @@ begin
   Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + 'km';
   Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + 'km/h';
   Info3 := Info3 + ', T0: ' + GetTimeString (Int(T0));
+  if MaxStSpd > 0 then  Info3 := Info3 + ', MaxStSpd: ' + FormatFloat('##0', MaxStSpd);
+  if MaxStAlt > 0 then  Info3 := Info3 + ', MaxStAlt: ' + FormatFloat('# ##0', MaxStAlt);
+  if MaxFinishIsBelowSt > 0 then  Info3 := Info3 + ', MaxFinishIsBelowSt : ' + FormatFloat('# ##0', MaxFinishIsBelowSt );
+
   
 // Give out PEV as Warnings
 // PevStartTimeBuffer is set to 30
