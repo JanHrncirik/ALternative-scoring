@@ -75,7 +75,7 @@ var
   
   PmaxDistance, PmaxTime : double;
 
-  MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
+  MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
   i,j,k : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
@@ -270,9 +270,9 @@ begin
 // Correction of speed and flight time with penalty seconds
 if UsePenaltySeconds = 1 then
 begin
-  MaxStSpd := ReadDayTagParameter ('MAXSTSPD', 0); 
-  MaxStAlt := ReadDayTagParameter ('MaxStAlt', 0);
-  MaxFinishIsBelowSt := ReadDayTagParameter ('MAXFINISHISBELOWST', 0);
+  MaxStSpd := ReadDayTagParameter('MAXSTSPD', 0); 
+  MaxStAlt := ReadDayTagParameter('MaxStAlt', 0);
+  MaxFinishIsBelowSt := ReadDayTagParameter('MAXFINISHISBELOWST', 0);
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
     DStSpd := 0;
