@@ -329,7 +329,7 @@ begin
          Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + FormatFloat('# ###',DPStAlt) + #13;
        end;
      
-     if DFinishIsBelowSt > 0 then
+     if DFinishIsBelowSt > MaxFinishIsBelowSt then
        begin
          Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
          Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + FormatFloat('# ###',DFinishIsBelowSt) + #13;
