@@ -341,7 +341,7 @@ begin
      
      T0 := Pilots[i].finish - Pilots[i].start;
      if (AAT = true) and (T0 < Task.TaskTime) Then T0 := Task.TaskTime;
-     Pilots[i].speed := Pilots[i].dis/T0;
+     if T0 > 0 then Pilots[i].speed := Pilots[i].dis/T0;
     end;
 end;
 
