@@ -293,9 +293,9 @@ begin
                PilotStartAltSum := PilotStartAltSum + Pilots[i].Fixes[j].AltQnh;
                if Pilots[i].fixes[j].Tsec = Pilots[i].start then
                begin
-                 PilotStartSpeedSum := Pilots[i].Fixes[j].Gsp;
+                 PilotStartSpeed := Pilots[i].Fixes[j].Gsp;
 		             PilotStartSpeedFixes := 0;
-                 PilotStartAltSum := Pilots[i].Fixes[j].AltQnh;
+                 PilotStartAlt := Pilots[i].Fixes[j].AltQnh;
                  break; // end the for j := loop
                end;
 	           end;
