@@ -271,6 +271,7 @@ begin
 if UsePenaltySeconds = 1 then
 begin
   MaxStSpd := ReadDayTagParameter('MAXSTSPD', 0); 
+  MaxStSpd := MaxStSpd*1000/3600 //Conversion of km/h to m/s
   MaxStAlt := ReadDayTagParameter('MaxStAlt', 0);
   MaxFinishIsBelowSt := ReadDayTagParameter('MAXFINISHISBELOWST', 0);
   for i:=0 to GetArrayLength(Pilots)-1 do
