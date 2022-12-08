@@ -290,42 +290,53 @@ begin
 		           PilotStartSpeedSum := PilotStartSpeedSum + Pilots[i].Fixes[j].Gsp;
 		           PilotStartSpeedFixes := PilotStartSpeedFixes + 1;
                PilotStartAltSum := PilotStartAltSum + Pilots[i].Fixes[j].AltQnh;
+               if Pilots[i].fixes[j].Tsec = Pilots[i].start then
+               begin
+                 PilotStartSpeedSum := Pilots[i].Fixes[j].Gsp;
+		             PilotStartSpeedFixes := 0;
+                 PilotStartAltSum := Pilots[i].Fixes[j].AltQnh;
+                 break; // end the for j := loop
+               end;
 	           end;
            if (Pilots[i].Fixes[j].Tsec > Pilots[i].start+10)  then break; // end the for j := loop
 	       end;
 
        if PilotStartSpeedfixes>0 then 
        begin
-         PilotStartSpeed := PilotStartSpeedSum / PilotStartSpeedFixes;
-         PilotStartAlt := PilotStartAltSum / PilotStartSpeedFixes;
+         PilotStartSpeed := Int(PilotStartSpeedSum / PilotStartSpeedFixes);
+         PilotStartAlt := Int(PilotStartAltSum / PilotStartSpeedFixes);
        end;
       end;
     
-    DStSpd := 0;
-    DPStAlt := 0;
-    DFinishIsBelowSt := 0;
+     DStSpd := 0;
+     DPStAlt := 0;
+     DFinishIsBelowSt := 0;
 	   
-		DStSpd := PilotStartSpeed - MaxStSpd;
-		DPStAlt := PilotStartAlt - MaxStAlt;.war
-    DFinishIsBelowSt := MaxFinishIsBelowSt - (PilotStartAlt - Pilots[i].finishAlt);
+		 DStSpd := PilotStartSpeed - MaxStSpd;
+		 DPStAlt := PilotStartAlt - MaxStAlt;
+     DFinishIsBelowSt := MaxFinishIsBelowSt - (PilotStartAlt - Pilots[i].finishAlt);
            
-    if DStSpd > 0 then
-      begin
-        Pilots[i].finish := Pilots[i].finish + Int(DStspd * PStSpd);
-        Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + IntToStr(Int(DStSpd));
-      end;
+     if DStSpd > 0 then
+       begin
+         Pilots[i].finish := Pilots[i].finish + DStspd * PStSpd;
+         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + IntToStr(DStSpd);
+       end;
     
-    if DPStAlt > 0 then
-      begin
-        Pilots[i].finish := Pilots[i].finish + Int(DPStAlt * PStAlt);
-        Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + IntToStr(Int(DPStAlt));
-      end;
+     if DPStAlt > 0 then
+       begin
+         Pilots[i].finish := Pilots[i].finish + DPStAlt * PStAlt;
+         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + IntToStr(DPStAlt);
+       end;
      
-    if DFinishIsBelowSt > 0 then
-      begin
-        Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
-        Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + IntToStr(Int(DFinishIsBelowSt));
-      end;      
+     if DFinishIsBelowSt > 0 then
+       begin
+         Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
+         Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + IntToStr(DFinishIsBelowSt);
+       end;   
+     
+     T0 := Pilots[i].finish - Pilots[i].start;
+     if (AAT = true) and (T0 < Task.TaskTime) Then T0 := Task.TaskTime;
+     Pilots[i].speed := Pilots[i].dis/T0;
     end;
 end;
 
