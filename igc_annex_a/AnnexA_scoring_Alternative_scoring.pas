@@ -492,7 +492,7 @@ end;
   Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + 'km';
   Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + 'km/h';
   Info3 := Info3 + ', T0: ' + GetTimeString (Int(T0));
-  if MaxStSpd > 0 then  Info3 := Info3 + ', MaxStSpd: ' + FormatFloat('##0', MaxStSpd);
+  if MaxStSpd > 0 then  Info3 := Info3 + ', MaxStSpd: ' + FormatFloat('##0', MaxStSpd*3.6);
   if MaxStAlt > 0 then  Info3 := Info3 + ', MaxStAlt: ' + FormatFloat('# ##0', MaxStAlt);
   if MaxFinishIsBelowSt > 0 then  Info3 := Info3 + ', MaxFinishIsBelowSt : ' + FormatFloat('# ##0', MaxFinishIsBelowSt );
 
