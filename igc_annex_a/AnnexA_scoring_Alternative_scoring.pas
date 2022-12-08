@@ -319,19 +319,19 @@ begin
      if DStSpd > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DStspd * PStSpd;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + IntToStr(DStSpd);
+         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + IntToStr(DStSpd) + #10;
        end;
     
      if DPStAlt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DPStAlt * PStAlt;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + IntToStr(DPStAlt);
+         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + IntToStr(DPStAlt) + #10;
        end;
      
      if DFinishIsBelowSt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
-         Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + IntToStr(DFinishIsBelowSt);
+         Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + IntToStr(DFinishIsBelowSt) + #10;
        end;   
      
      T0 := Pilots[i].finish - Pilots[i].start;
