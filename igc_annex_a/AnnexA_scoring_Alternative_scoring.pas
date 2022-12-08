@@ -314,6 +314,7 @@ begin
      DFinishIsBelowSt := 0;
 	   
 		 DStSpd := PilotStartSpeed - MaxStSpd;
+     DStSpd := DStSpd * 3.6; // m/s to km/h
 		 DPStAlt := PilotStartAlt - MaxStAlt;
      DFinishIsBelowSt := MaxFinishIsBelowSt - (PilotStartAlt - Pilots[i].finishAlt);
 
