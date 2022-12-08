@@ -316,17 +316,18 @@ begin
 		 DStSpd := PilotStartSpeed - MaxStSpd;
 		 DPStAlt := PilotStartAlt - MaxStAlt;
      DFinishIsBelowSt := MaxFinishIsBelowSt - (PilotStartAlt - Pilots[i].finishAlt);
-           
+
+     Pilots[i].Warning := Pilots[i].Warning + #13;      
      if DStSpd > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DStspd * PStSpd;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + FormatFloat('# ###',DStSpd) + #13;
+         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + FormatFloat('# ###',DStSpd) + #10;
        end;
     
      if DPStAlt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DPStAlt * PStAlt;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + FormatFloat('# ###',DPStAlt) + #13;
+         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + FormatFloat('# ###',DPStAlt) + #10;
        end;
      
      if DFinishIsBelowSt > MaxFinishIsBelowSt then
@@ -334,6 +335,8 @@ begin
          Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
          Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + FormatFloat('# ###',DFinishIsBelowSt) + #13;
        end;   
+
+     Pilots[i].Warning := Pilots[i].Warning + #13 + FormatFloat('# ###',DStSpd) + #10 +  FormatFloat('# ###',DPStAlt) + #10 + FormatFloat('# ###',DFinishIsBelowSt) + #13;
      
      T0 := Pilots[i].finish - Pilots[i].start;
      if (AAT = true) and (T0 < Task.TaskTime) Then T0 := Task.TaskTime;
