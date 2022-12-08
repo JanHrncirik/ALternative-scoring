@@ -316,7 +316,7 @@ begin
 		 DStSpd := PilotStartSpeed - MaxStSpd;
      DStSpd := DStSpd * 3.6; // m/s to km/h
 		 DPStAlt := PilotStartAlt - MaxStAlt;
-     DFinishIsBelowSt := MaxFinishIsBelowSt - (PilotStartAlt - Pilots[i].finishAlt);
+     DFinishIsBelowSt := (PilotStartAlt - Pilots[i].finishAlt) - MaxFinishIsBelowSt;
 
      Pilots[i].Warning := Pilots[i].Warning + #13;      
      if DStSpd > 0 then
