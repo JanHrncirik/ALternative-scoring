@@ -8,7 +8,7 @@ Program IGC_Annex_A_scoring_2023_with_penalty;
 // Version 10.00
 // Added penalty seconds for higher starting speed, for exceeding the starting height and for exceeding the permitted start-finish height loss
 // . support for penalty seconds
-// . enter "MaxStSpd=150" in DayTag for taking penalty seconds for exceeding the GPS start speed 150 km/h.
+// . enter "MaxStSpd=150" in DayTag for taking penalty seconds for exceeding the GSP start speed 150 km/h.
 // . enter "MaxStAlt=1700" in DayTag for exceeding the start height.
 // . enter "MaxFinishIsBelowSt=1200" in DayTag for exceeding the maximum "Finish is below start for:"
 // . example: "PEVWaitTime=10 PEVStartWindow=10 MaxStSpd=150 MaxStAlt=1700 MaxFinishIsBelowSt=1200"
@@ -283,7 +283,7 @@ begin
     PilotStartAltSum :=0;
 	  if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) Then
 	    begin
-	      CountFixes := GetArrayLength(Pilots[i].Fixes;
+	      CountFixes := GetArrayLength(Pilots[i].Fixes);
         HHF := CountFixes;
         StartFixFound := true;
         while StartFixFound do
@@ -291,20 +291,22 @@ begin
           repeat
           begin
             HHF := Trunc(HHF/2);
-          until Pilots[í].start < Pilots[i].Fixes[HHF].Tsec or HHF <= 2;
-         if pilots[i].start = Pilots[i].fixes[HHF] then
+          end;
+          until (Pilots[i].start < Pilots[i].Fixes[HHF].Tsec) or (HHF <= 2);
+         if Pilots[i].start = Pilots[i].fixes[HHF].Tsec then
           begin
            StartFixFound := false;
            PilotStartAlt := Pilots[i].Fixes[HHF].AltQnh;
-           PilotStartSpeed := Pilots[i].Fixes[HHF].GPS;
+           PilotStartSpeed := Pilots[i].Fixes[HHF].Gsp;
           end;       
-         if pilots[i].start > Pilots[i].fixes[HHF+1] then
+         if pilots[i].start > Pilots[i].fixes[HHF+1].Tsec then
           begin
            StartFixFound := false;
            PilotStartAlt := (Pilots[i].Fixes[HHF].AltQnh + Pilots[i].Fixes[HHF+1].AltQnh)/2;
-           PilotStartSpeed := (Pilots[i].Fixes[HHF].GPS + Pilots[i].Fixes[HHF+1].GPS)/2;
+           PilotStartSpeed := (Pilots[i].Fixes[HHF].Gsp + Pilots[i].Fixes[HHF+1].Gsp)/2;
+          end 
           else
-           HHF := 3*HHF / 2;
+           HHF := Trunc(3*HHF / 2);
           end;  
          if HHF < 3 then StartFixFound := false;     
         end;
@@ -502,7 +504,7 @@ end;
 
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
-    Pilots[i].Warning := ''; 
+    //Pilots[i].Warning := ''; 
     if (Pilots[i].start > 0) Then
     begin	
       if (PEVWaitTime>0) and (PEVStartWindow>0) then   
@@ -534,12 +536,12 @@ end;
           else
             if (Pilots[i].start>=Task.NoStartBeforeTime) and (AllUserWrng>=1) Then
               PEVWarning:=PevWarning+' Start='+GetTimestring(Trunc(Pilots[i].Start))+' OK'+', '; 
-          Pilots[i].Warning:= PevWarning;
+          //Pilots[i].Warning:= PevWarning;
         end
         else
            PEVWarning:='PEV not found!'+', ';
 
-        Pilots[i].Warning:= PevWarning;   
+        //Pilots[i].Warning:= PevWarning;   
       end;
       if Pilots[i].start<Task.NoStartBeforeTime then Pilots[i].Warning :=Pilots[i].Warning+' Start='+GetTimestring(Trunc(Pilots[i].start))+' before gate opens!'+', ';     
     end;
