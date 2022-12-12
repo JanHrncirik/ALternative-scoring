@@ -318,7 +318,7 @@ begin
 		 DPStAlt := PilotStartAlt - MaxStAlt;
      DFinishIsBelowSt := (PilotStartAlt - Pilots[i].finishAlt) - MaxFinishIsBelowSt;
 
-     Pilots[i].Warning := Pilots[i].Warning + #13;      
+     Pilots[i].Warning := '';      
      if DStSpd > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DStspd * PStSpd;
