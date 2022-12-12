@@ -77,13 +77,13 @@ var
 
   MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
-  i,j,k : integer;
+  i,j,k, CountFixes, HHF : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
   AAT : boolean;
-  Auto_Hcaps_on : boolean;
+  Auto_Hcaps_on, StartFixFound : boolean;
   
   // Starttime calculation and PEV Warnings
-  PilotStartSpeed, PilotStartSpeedSum, PilotStartSpeedFixes, PilotStartAlt, PilotStartAltSum : double;
+  PilotStartSpeed, PilotStartSpeedSum, PilotStartAlt, PilotStartAltSum : double;
   ActMarker  : TMarker; 
   PevWarning : String;
   Ignore_PEV,PEVStartNotValid : boolean;  
@@ -278,36 +278,36 @@ begin
   begin
     // Calculation of average departure parameters
     PilotStartSpeed := 0;
-	  PilotStartSpeedSum := 0;
-	  PilotStartSpeedFixes := 0;	
+	  PilotStartSpeedSum := 0;	
     PilotStartAlt := 0;
     PilotStartAltSum :=0;
 	  if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) Then
 	    begin
-	     for j := 0 to GetArrayLength(Pilots[i].Fixes)-1 do
-	       begin
-	         if (Pilots[i].Fixes[j].Tsec >= Pilots[i].start-9) and (Pilots[i].Fixes[j].Tsec <= Pilots[i].start+10) Then
-		         begin
-		           PilotStartSpeedSum := PilotStartSpeedSum + Pilots[i].Fixes[j].Gsp;
-		           PilotStartSpeedFixes := PilotStartSpeedFixes + 1;
-               PilotStartAltSum := PilotStartAltSum + Pilots[i].Fixes[j].AltQnh;
-               if Pilots[i].fixes[j].Tsec = Pilots[i].start then
-               begin
-                 PilotStartSpeed := Pilots[i].Fixes[j].Gsp;
-		             PilotStartSpeedFixes := 0;
-                 PilotStartAlt := Pilots[i].Fixes[j].AltQnh;
-                 break; // end the for j := loop
-               end;
-	           end;
-           if (Pilots[i].Fixes[j].Tsec > Pilots[i].start+10)  then break; // end the for j := loop
-	       end;
-
-       if PilotStartSpeedfixes>0 then 
-       begin
-         PilotStartSpeed := Int(PilotStartSpeedSum / PilotStartSpeedFixes);
-         PilotStartAlt := Int(PilotStartAltSum / PilotStartSpeedFixes);
-       end;
-      end;
+	      CountFixes := GetArrayLength(Pilots[i].Fixes;
+        HHF := CountFixes;
+        StartFixFound := true;
+        while StartFixFound do
+        begin
+          repeat
+          begin
+            HHF := Trunc(HHF/2);
+          until Pilots[í].start < Pilots[i].Fixes[HHF].Tsec or HHF <= 2;
+         if pilots[i].start = Pilots[i].fixes[HHF] then
+          begin
+           StartFixFound := false;
+           PilotStartAlt := Pilots[i].Fixes[HHF].AltQnh;
+           PilotStartSpeed := Pilots[i].Fixes[HHF].GPS;
+          end;       
+         if pilots[i].start > Pilots[i].fixes[HHF+1] then
+          begin
+           StartFixFound := false;
+           PilotStartAlt := (Pilots[i].Fixes[HHF].AltQnh + Pilots[i].Fixes[HHF+1].AltQnh)/2;
+           PilotStartSpeed := (Pilots[i].Fixes[HHF].GPS + Pilots[i].Fixes[HHF+1].GPS)/2;
+          else
+           HHF := 3*HHF / 2;
+          end;  
+         if HHF < 3 then StartFixFound := false;     
+        end;
     
      DStSpd := 0;
      DPStAlt := 0;
@@ -543,30 +543,5 @@ end;
       end;
       if Pilots[i].start<Task.NoStartBeforeTime then Pilots[i].Warning :=Pilots[i].Warning+' Start='+GetTimestring(Trunc(Pilots[i].start))+' before gate opens!'+', ';     
     end;
-  end;
- 
-// +/- 10 sec start speed interpolation if variable MaxStartSpeed is set by daytag "MaxStSpd= " to values >0
-  if MaxStartSpeed>0 Then 
-  for i:=0 to GetArrayLength(Pilots)-1 do
-    begin
-    PilotStartSpeed := 0;
-	  PilotStartSpeedSum := 0;
-	  PilotStartSpeedFixes := 0;	
-	  if (Pilots[i].start > 0) Then
-	    begin
-	     for j := 0 to GetArrayLength(Pilots[i].Fixes)-1 do
-	       begin
-	         if (Pilots[i].Fixes[j].Tsec >= Pilots[i].start-9) and (Pilots[i].Fixes[j].Tsec <= Pilots[i].start+10) Then
-		         begin
-		           PilotStartSpeedSum := PilotStartSpeedSum + Pilots[i].Fixes[j].Gsp;
-		           PilotStartSpeedFixes := PilotStartSpeedFixes + 1;
-	           end;
-           if (Pilots[i].Fixes[j].Tsec > Pilots[i].start+10)  then break; // end the for j := loop
-	       end;
-
-       if PilotStartSpeedfixes>0 then PilotStartSpeed := PilotStartSpeedSum / PilotStartSpeedFixes;
-       if (Round(PilotStartSpeed*3.6) > MaxStartSpeed) Then 
-         Pilots[i].Warning := Pilots[i].Warning+ ' Startspeed=' + FloatToStr(Round(PilotStartSpeed*3.6)) + ' km/h-> ' + FloatToStr(Round(PilotStartSpeed*3.6)- MaxStartSpeed) + ' km/h too fast' ;
-      end;
   end;
 end.
