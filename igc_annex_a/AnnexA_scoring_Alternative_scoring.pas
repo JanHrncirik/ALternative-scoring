@@ -71,7 +71,7 @@ var
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
   Pm, Pdm, Pvm, Pn, F, Fcr, Sp0, Spm, Day: Double;  
 
-  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S  : double;
+  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S, CountFixes, HHF  : double;
   
   PmaxDistance, PmaxTime : double;
 
@@ -291,6 +291,11 @@ begin
           repeat
           begin
             HHF := Trunc(HHF/2);
+            if HHF => CountFixes then 
+             begin
+              Info1 := 'HHF out of range HHF = ' + IntToStr(HHF) + ' CountFixes = ' + IntToStr(CountFixes);
+	            Exit;		
+             end;
           end;
           until (Pilots[i].start < Pilots[i].Fixes[HHF].Tsec) or (HHF <= 2);
          if Pilots[i].start = Pilots[i].fixes[HHF].Tsec then
@@ -302,12 +307,17 @@ begin
          if pilots[i].start > Pilots[i].fixes[HHF+1].Tsec then
           begin
            StartFixFound := false;
+           if HHF >=  CountFixes then 
+            begin
+             Info1 := 'HHF out of range HHF = ' + IntToStr(HHF) + ' CountFixes = ' + IntToStr(CountFixes);
+	           Exit;		
+            end;
            PilotStartAlt := (Pilots[i].Fixes[HHF].AltQnh + Pilots[i].Fixes[HHF+1].AltQnh)/2;
            PilotStartSpeed := (Pilots[i].Fixes[HHF].Gsp + Pilots[i].Fixes[HHF+1].Gsp)/2;
           end 
           else
            HHF := CountFixes + HHF;
-           if Trunc(HHF/2) > CountFixes-1 tHHF := CountFixes + HHF;hen StartFixFound := false;
+           if Trunc(HHF/2) > CountFixes-1 then StartFixFound := false;
           end;  
          if HHF < 3 then StartFixFound := false;     
         end;
