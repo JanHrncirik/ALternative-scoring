@@ -307,7 +307,7 @@ begin
           end 
           else
            HHF := CountFixes + HHF;
-           if Trunc(HHF/2) > CountFixes-1 then StartFixFound := false;
+           if Trunc(HHF/2) > CountFixes-1 tHHF := CountFixes + HHF;hen StartFixFound := false;
           end;  
          if HHF < 3 then StartFixFound := false;     
         end;
