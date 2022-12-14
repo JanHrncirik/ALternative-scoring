@@ -61,7 +61,7 @@ Program IGC_Annex_A_scoring_2023_with_penalty;
 //   . added warnings when Exit 
 
 const UseHandicaps = 2;         // set to: 0 to disable handicapping, 1 to use handicaps, 2 is auto (handicaps only for club and multi-seat)
-      PevStartTimeBuffer = 30;  // PEV which is less than PevStartTimeBuffer seconds later than last PEV will be ignored and not counted
+      PevStartTimeBuffer = 30;  // PEV which is less than PevStartTimeBuffer seconds later than last PEV will be iCountFixesgnored and not counted
       UsePenaltySeconds = 1;    // If set to 1, it will use penalty seconds, otherwise it will only give warnings   
       PStSpd=5;                  // +5 s/ 1 km/h for exceeding the maximum starting speed
       PStAlt=2;                  // +2 s/ 1 m for exceeding the maximum start altitud
@@ -77,7 +77,7 @@ var
 
   MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
-  i,j,k, CountFixes, HHF, center, left, right, result : integer;
+  i,j,k, CountFixes, HHF, center, Vleft, Vright, Vresult, item : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
   AAT : boolean;
   Auto_Hcaps_on, StartFixFound : boolean;
@@ -291,40 +291,40 @@ begin
         begin
           item := Pilots[i].start;
           anarray := Pilots[i].Fixes;
-          left:=0;
-          right:=length(anarray) - 1;
-          if ((item < anarray[left]) or (item > anarray[right])) then // prvek mimo rozsah
+          Vleft:=0;
+          Vright:=length(anarray) - 1;
+          if ((item < anarray[Vleft]) or (item > anarray[Vright])) then // prvek mimo rozsah
           begin
-            result:=-1;
+            Vresult:=-1;
             Info1 := 'element out of scope item = ' + IntToStr(item);
             exit;
           end;
-          while (left <= right) do begin // if we have something to share
-            center:=(left + right) div 2;
+          while (Vleft <= Vright) do begin // if we have something to share
+            center:=(Vleft + Vright) div 2;
             if (item = anarray[center].Tsec) then
               begin
                 PilotStartAlt := anarray[center].AltQnh;
                 PilotStartSpeed := anarray[center].Gsp;
-                result:=center; // found
+                Vresult:=center; // found
                 Break; // Ending the loop while
             end
             else
             if (item < anarray[center].Tsec) then
-              right:=center - 1 // throw away the right half
+              Vright:=center - 1 // throw away the Vright half
             else
-              left:=center + 1; // discard the left half
+              Vleft:=center + 1; // discard the Vleft half
               if (item < anarray[center+1].Tsec) then
                 begin
                   PilotStartAlt := (anarray[center].AltQnh + anarray[center+1].AltQnh) div 2;
                   PilotStartSpeed := (anarray[center].Gsp + anarray[center+1].Gsp;) div 2
-                  result:=center; // found
+                  Vresult:=center; // found
                   Break; // Ending the loop while
                 end;
 
             end;
-          result:=-1;
+          Vresult:=-1;
         end;
-        If result = -1 then
+        If Vresult = -1 then
           begin
             Info1 := 'Start not found!';
             exit;
