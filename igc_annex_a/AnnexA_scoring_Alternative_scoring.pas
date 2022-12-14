@@ -77,7 +77,7 @@ var
 
   MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
-  i,j,k, CountFixes, HHF : integer;
+  i,j,k, CountFixes, HHF, center, left, right, result : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
   AAT : boolean;
   Auto_Hcaps_on, StartFixFound : boolean;
@@ -283,44 +283,53 @@ begin
     PilotStartAltSum :=0;
 	  if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) Then
 	    begin
-	      CountFixes := GetArrayLength(Pilots[i].Fixes);
-        HHF := CountFixes;
-        StartFixFound := true;
-        while StartFixFound do
+	      //CountFixes := GetArrayLength(Pilots[i].Fixes);
+        //HHF := CountFixes;
+        //StartFixFound := true;
+
+        // binary searches Begin
         begin
-          repeat
+          item := Pilots[i].start;
+          anarray := Pilots[i].Fixes;
+          left:=0;
+          right:=length(anarray) - 1;
+          if ((item < anarray[left]) or (item > anarray[right])) then // prvek mimo rozsah
           begin
-            HHF := Trunc(HHF/2);
-            if HHF => CountFixes then 
-             begin
-              Info1 := 'HHF out of range HHF = ' + IntToStr(HHF) + ' CountFixes = ' + IntToStr(CountFixes);
-	            Exit;		
-             end;
+            result:=-1;
+            Info1 := 'element out of scope item = ' + IntToStr(item);
+            exit;
           end;
-          until (Pilots[i].start < Pilots[i].Fixes[HHF].Tsec) or (HHF <= 2);
-         if Pilots[i].start = Pilots[i].fixes[HHF].Tsec then
-          begin
-           StartFixFound := false;
-           PilotStartAlt := Pilots[i].Fixes[HHF].AltQnh;
-           PilotStartSpeed := Pilots[i].Fixes[HHF].Gsp;
-          end;       
-         if pilots[i].start > Pilots[i].fixes[HHF+1].Tsec then
-          begin
-           StartFixFound := false;
-           if HHF >=  CountFixes then 
-            begin
-             Info1 := 'HHF out of range HHF = ' + IntToStr(HHF) + ' CountFixes = ' + IntToStr(CountFixes);
-	           Exit;		
+          while (left <= right) do begin // if we have something to share
+            center:=(left + right) div 2;
+            if (item = anarray[center].Tsec) then
+              begin
+                PilotStartAlt := anarray[center].AltQnh;
+                PilotStartSpeed := anarray[center].Gsp;
+                result:=center; // found
+                Break; // Ending the loop while
+            end
+            else
+            if (item < anarray[center].Tsec) then
+              right:=center - 1 // throw away the right half
+            else
+              left:=center + 1; // discard the left half
+              if (item < anarray[center+1].Tsec) then
+                begin
+                  PilotStartAlt := (anarray[center].AltQnh + anarray[center+1].AltQnh) div 2;
+                  PilotStartSpeed := (anarray[center].Gsp + anarray[center+1].Gsp;) div 2
+                  result:=center; // found
+                  Break; // Ending the loop while
+                end;
+
             end;
-           PilotStartAlt := (Pilots[i].Fixes[HHF].AltQnh + Pilots[i].Fixes[HHF+1].AltQnh)/2;
-           PilotStartSpeed := (Pilots[i].Fixes[HHF].Gsp + Pilots[i].Fixes[HHF+1].Gsp)/2;
-          end 
-          else
-           HHF := CountFixes + HHF;
-           if Trunc(HHF/2) > CountFixes-1 then StartFixFound := false;
-          end;  
-         if HHF < 3 then StartFixFound := false;     
+          result:=-1;
         end;
+        If result = -1 then
+          begin
+            Info1 := 'Start not found!';
+            exit;
+          end;  
+        // binary searches End
     
      DStSpd := 0;
      DPStAlt := 0;
