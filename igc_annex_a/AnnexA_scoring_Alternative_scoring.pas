@@ -71,13 +71,13 @@ var
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
   Pm, Pdm, Pvm, Pn, F, Fcr, Sp0, Spm, Day: Double;  
 
-  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S, CountFixes, HHF  : double;
+  D, H, Dh, M, T, Dc, Pd, V, Vh, Pv, Sp, S : double;
   
   PmaxDistance, PmaxTime : double;
 
   MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
-  i,j,k, CountFixes, HHF, center, Vleft, Vright, Vresult, item : integer;
+  i,j,k, CountFixes, HHF, center, Vleft, Vright, Vresult, item  : integer;
   PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
   AAT : boolean;
   Auto_Hcaps_on, StartFixFound : boolean;
@@ -289,11 +289,10 @@ begin
 
         // binary searches Begin
         begin
-          item := Pilots[i].start;
-          anarray := Pilots[i].Fixes;
+          item := Trunc(Pilots[i].start);
           Vleft:=0;
-          Vright:=length(anarray) - 1;
-          if ((item < anarray[Vleft]) or (item > anarray[Vright])) then // prvek mimo rozsah
+          Vright:= GetArrayLength(Pilots[i].Fixes) - 1;
+          if ((item < Pilots[i].Fixes[Vleft].Tsec) or (item > Pilots[i].Fixes[Vright].Tsec)) then // element out of scope
           begin
             Vresult:=-1;
             Info1 := 'element out of scope item = ' + IntToStr(item);
@@ -301,22 +300,22 @@ begin
           end;
           while (Vleft <= Vright) do begin // if we have something to share
             center:=(Vleft + Vright) div 2;
-            if (item = anarray[center].Tsec) then
+            if (item = Pilots[i].Fixes[center].Tsec) then
               begin
-                PilotStartAlt := anarray[center].AltQnh;
-                PilotStartSpeed := anarray[center].Gsp;
+                PilotStartAlt := Pilots[i].Fixes[center].AltQnh;
+                PilotStartSpeed := Pilots[i].Fixes[center].Gsp;
                 Vresult:=center; // found
                 Break; // Ending the loop while
             end
             else
-            if (item < anarray[center].Tsec) then
+            if (item < Pilots[i].Fixes[center].Tsec) then
               Vright:=center - 1 // throw away the Vright half
             else
               Vleft:=center + 1; // discard the Vleft half
-              if (item < anarray[center+1].Tsec) then
+              if (item < Pilots[i].Fixes[center+1].Tsec) then
                 begin
-                  PilotStartAlt := (anarray[center].AltQnh + anarray[center+1].AltQnh) div 2;
-                  PilotStartSpeed := (anarray[center].Gsp + anarray[center+1].Gsp;) div 2
+                  PilotStartAlt := (Pilots[i].Fixes[center].AltQnh + Pilots[i].Fixes[center+1].AltQnh) / 2;
+                  PilotStartSpeed := (Pilots[i].Fixes[center].Gsp + Pilots[i].Fixes[center+1].Gsp) / 2;
                   Vresult:=center; // found
                   Break; // Ending the loop while
                 end;
@@ -326,7 +325,7 @@ begin
         end;
         If Vresult = -1 then
           begin
-            Info1 := 'Start not found!';
+            Info1 := 'Start not found! Vresult = -1';
             exit;
           end;  
         // binary searches End
