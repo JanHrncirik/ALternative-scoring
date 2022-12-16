@@ -280,7 +280,8 @@ begin
     PilotStartSpeed := 0;
 	  PilotStartSpeedSum := 0;	
     PilotStartAlt := 0;
-    PilotStartAltSum :=0;
+    PilotStartAltSum := 0;
+    Vresult:= 0;
 	  if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) Then
 	    begin
 	      //CountFixes := GetArrayLength(Pilots[i].Fixes);
@@ -298,7 +299,7 @@ begin
             Info1 := 'element out of scope item = ' + IntToStr(item);
             exit;
           end;
-          
+
           while (Vleft <= Vright) do begin // if we have something to share
             center:=(Vleft + Vright) div 2;
             if (item = Pilots[i].Fixes[center].Tsec) then
@@ -566,4 +567,5 @@ end;
       if Pilots[i].start<Task.NoStartBeforeTime then Pilots[i].Warning :=Pilots[i].Warning+' Start='+GetTimestring(Trunc(Pilots[i].start))+' before gate opens!'+', ';     
     end;
   end;
+end;  
 end.
