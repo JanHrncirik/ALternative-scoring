@@ -306,7 +306,7 @@ begin
               begin
                 PilotStartAlt := Pilots[i].Fixes[center].AltQnh;
                 PilotStartSpeed := Pilots[i].Fixes[center].Gsp;
-                Vresult:=center; // found
+                Vresult:= 1; // found
                 Break; // Ending the loop while
             end
             else
@@ -318,18 +318,24 @@ begin
                 begin
                   PilotStartAlt := (Pilots[i].Fixes[center].AltQnh + Pilots[i].Fixes[center+1].AltQnh) / 2;
                   PilotStartSpeed := (Pilots[i].Fixes[center].Gsp + Pilots[i].Fixes[center+1].Gsp) / 2;
-                  Vresult:=center; // found
+                  Vresult:= 2; // found
                   Break; // Ending the loop while
                 end;
 
             end;
-          Vresult:=-1;
         end;
-        If Vresult = -1 then
+        If Vresult = 0 then
           begin
-            Info1 := 'Start not found! Vresult = -1';
-            exit;
+            Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Vresult = 0' + ' CN = ' + Pilots[i].CompID;
           end;  
+        If Vresult = 1 then
+         begin
+           Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start found!' + ' CN = ' + Pilots[i].CompID;
+         end;  
+        If Vresult = 2 then
+         begin
+           Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Calculated average values from the fix before and after the start.' + ' CN = ' + Pilots[i].CompID;
+         end;  
         // binary searches End
     
      DStSpd := 0;
