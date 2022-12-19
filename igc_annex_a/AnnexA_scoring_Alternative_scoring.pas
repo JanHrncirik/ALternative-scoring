@@ -65,7 +65,7 @@ const UseHandicaps = 2;         // set to: 0 to disable handicapping, 1 to use h
       UsePenaltySeconds = 1;    // If set to 1, it will use penalty seconds, otherwise it will only give warnings   
       PStSpd=5;                  // +5 s/ 1 km/h for exceeding the maximum starting speed
       PStAlt=2;                  // +2 s/ 1 m for exceeding the maximum start altitud
-      PFinishIsBelowSt=1;     // +2 s/ 1 m for exceeding the maximum "Finish is below start for"
+      PFinishIsBelowSt=1;     // +1 s/ 1 m for exceeding the maximum "Finish is below start for"
 var
   Dm, D1,
   Dt, n1, n2, n3, n4, N, D0, Vo, T0, Hmin,
