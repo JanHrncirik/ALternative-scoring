@@ -25,7 +25,7 @@ Program IGC_Annex_A_scoring_2023_with_penalty;
 //   . if "AllUserWrng" in DayTag is set to 0 user warning with PEVs is only shown if penalty should be necessary otherwise PEVs are displayed
 //   . buffer zone as a script parameter
 //   . added start speed interpolation according to DAEC SWO 7.3.5
-//   . enter "MaxStSpd=130" in DayTag to have interpolation and userwarnings if average start speed is higher than 130km/h 
+//   . enter "MaxStSpd=130" in DayTag to have interpolation and userwarnings if average start speed is higher than 130 km/h 
 // Version 8.01, Date 20.04.2021
 //   . added ReadDayTagParameter() function to read any DayTag parameter
 //   . parameters in DayTag now have to be separated by space (only)
@@ -518,8 +518,8 @@ end;
   Info3 := Info3 +' N: ' + IntToStr(Round(N));
   Info3 := Info3 + ', n1: ' + IntToStr(Round(n1));
   Info3 := Info3 + ', n3: ' + IntToStr(Round(n3));
-  Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + 'km';
-  Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + 'km/h';
+  Info3 := Info3 + ', Do: ' + FormatFloat('0.00',D0/1000.0) + ' km';
+  Info3 := Info3 + ', Vo: ' + FormatFloat('0.00',Vo*3.6) + ' km/h';
   Info3 := Info3 + ', T0: ' + GetTimeString (Int(T0));
   if MaxStSpd > 0 then  Info3 := Info3 + ', MaxStSpd: ' + FormatFloat('##0', MaxStSpd*3.6);
   if MaxStAlt > 0 then  Info3 := Info3 + ', MaxStAlt: ' + FormatFloat('# ##0', MaxStAlt);
