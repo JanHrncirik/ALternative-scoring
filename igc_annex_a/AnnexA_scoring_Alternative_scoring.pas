@@ -293,6 +293,11 @@ begin
           item := Trunc(Pilots[i].start);
           Vleft:=0;
           Vright:= GetArrayLength(Pilots[i].Fixes) - 1;
+          if Vright < 0 then
+            begin
+               Info1 := 'Vright = -1';
+               Exit;
+            end;
           if ((item < Pilots[i].Fixes[Vleft].Tsec) or (item > Pilots[i].Fixes[Vright].Tsec)) then // element out of scope
           begin
             Vresult:=-1;
@@ -324,18 +329,18 @@ begin
 
             end;
         end;
-        If Vresult = 0 then
-          begin
-            Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Vresult = 0' + ' CN = ' + Pilots[i].CompID;
-          end;  
-        If Vresult = 1 then
-         begin
-           Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start found!' + ' CN = ' + Pilots[i].CompID;
-         end;  
-        If Vresult = 2 then
-         begin
-           Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Calculated average values from the fix before and after the start.' + ' CN = ' + Pilots[i].CompID;
-         end;  
+        //If Vresult = 0 then
+          //begin
+            //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Vresult = 0' + ' CN = ' + Pilots[i].CompID;
+          //end;  
+        //If Vresult = 1 then
+         //begin
+           //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start found!' + ' CN = ' + Pilots[i].CompID;
+         //end;  
+        //If Vresult = 2 then
+         //begin
+           //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Calculated average values from the fix before and after the start.' + ' CN = ' + Pilots[i].CompID;
+         //end;  
         // binary searches End
     
      DStSpd := 0;
@@ -350,28 +355,36 @@ begin
      Pilots[i].Warning := '';      
      if DStSpd > 0 then
        begin
-         Pilots[i].finish := Pilots[i].finish + DStspd * PStSpd;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DStSpd = ' + FormatFloat('# ###',DStSpd) + #10;
+         Pilots[i].finish := Pilots[i].finish + Int(DStspd * PStSpd);
+         Pilots[i].Warning := Pilots[i].Warning  + 'Start speed higher by ' + FormatFloat('# ###.00',DStSpd) + 'km/h, penalty seconds = ' + FormatFloat('# ###',DStspd * PStSpd) + '; ';
        end;
     
      if DPStAlt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DPStAlt * PStAlt;
-         Pilots[i].Warning := Pilots[i].Warning  + ' DPStAlt = ' + FormatFloat('# ###',DPStAlt) + #10;
-       end;
+         Pilots[i].Warning := Pilots[i].Warning  + ' Start height exceeded by ' + FormatFloat('# ###',DPStAlt) + 'm, penalty seconds = ' + FormatFloat('# ###',DPStAlt * PStAlt) + '; ';
+       end;  
      
      if DFinishIsBelowSt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
-         Pilots[i].Warning := Pilots[i].Warning  + ' D Start-Finis alt. = ' + FormatFloat('# ###',DFinishIsBelowSt) + #13;
+         Pilots[i].Warning := Pilots[i].Warning  + ' Altitude loss between departure and arrival exceeded by ' + FormatFloat('# ###',DFinishIsBelowSt) + 'm, penalty seconds = ' + FormatFloat('# ###',DFinishIsBelowSt * PFinishIsBelowSt) + '; ';
        end;   
 
-     Pilots[i].Warning := Pilots[i].Warning + #13 + FormatFloat('# ###',DStSpd) + #10 +  FormatFloat('# ###',DPStAlt) + #10 + FormatFloat('# ###',DFinishIsBelowSt) + #13;
+     if (DStSpd > 0) or (DPStAlt > 0) or (DFinishIsBelowSt > 0) then
+       begin
+         center := 0;
+         If (DStspd * PStSpd) > 0 then center := center + Int(DStspd * PStSpd);
+         If (DPStAlt * PStAlt) > 0 then center := center + Int(DPStAlt * PStAlt);
+         If (DFinishIsBelowSt * PFinishIsBelowSt) > 0 then center := center + Int(DFinishIsBelowSt * PFinishIsBelowSt);
+         Pilots[i].Warning := Pilots[i].Warning  + ' Time added to the flight ' + GetTimeString (center) + '; ' + #13; 
+       end;
      
      T0 := Pilots[i].finish - Pilots[i].start;
      if (AAT = true) and (T0 < Task.TaskTime) Then T0 := Task.TaskTime;
      if T0 > 0 then Pilots[i].speed := Pilots[i].dis/T0;
     end;
+  end;  
 end;
 
   D0 := 0;
@@ -531,7 +544,7 @@ end;
 
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
-    //Pilots[i].Warning := ''; 
+    Pilots[i].Warning := Pilots[i].Warning + #13; 
     if (Pilots[i].start > 0) Then
     begin	
       if (PEVWaitTime>0) and (PEVStartWindow>0) then   
@@ -563,15 +576,14 @@ end;
           else
             if (Pilots[i].start>=Task.NoStartBeforeTime) and (AllUserWrng>=1) Then
               PEVWarning:=PevWarning+' Start='+GetTimestring(Trunc(Pilots[i].Start))+' OK'+', '; 
-          //Pilots[i].Warning:= PevWarning;
+          Pilots[i].Warning:= Pilots[i].Warning + #13 + PevWarning;
         end
         else
            PEVWarning:='PEV not found!'+', ';
 
-        //Pilots[i].Warning:= PevWarning;   
+        Pilots[i].Warning:= Pilots[i].Warning + #13 +PevWarning;   
       end;
       if Pilots[i].start<Task.NoStartBeforeTime then Pilots[i].Warning :=Pilots[i].Warning+' Start='+GetTimestring(Trunc(Pilots[i].start))+' before gate opens!'+', ';     
     end;
   end;
-end;  
 end.
