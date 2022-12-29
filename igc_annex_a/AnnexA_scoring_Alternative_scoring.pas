@@ -301,7 +301,7 @@ begin
             exit;
           end;
 
-          while (Vleft <= Vright) do begin // if we have something to share
+          while (Vleft <= Vright) and (Vright > 20) do begin // if we have something to share
             center:=(Vleft + Vright) div 2;
             if (item = Pilots[i].Fixes[center].Tsec) then
               begin
