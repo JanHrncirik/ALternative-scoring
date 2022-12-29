@@ -25,7 +25,7 @@ Program IGC_Annex_A_scoring_2023_with_penalty;
 //   . if "AllUserWrng" in DayTag is set to 0 user warning with PEVs is only shown if penalty should be necessary otherwise PEVs are displayed
 //   . buffer zone as a script parameter
 //   . added start speed interpolation according to DAEC SWO 7.3.5
-//   . enter "MaxStSpd=130" in DayTag to have interpolation and userwarnings if average start speed is higher than 130 km/h 
+//   . enter "MaxStSpd2=130" in DayTag to have interpolation and userwarnings if average start speed is higher than 130 km/h 
 // Version 8.01, Date 20.04.2021
 //   . added ReadDayTagParameter() function to read any DayTag parameter
 //   . parameters in DayTag now have to be separated by space (only)
@@ -75,10 +75,10 @@ var
   
   PmaxDistance, PmaxTime : double;
 
-  MaxStSpd, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
+  MaxStSpd, MaxStSpd2, MaxStAlt, MaxFinishIsBelowSt, DStSpd, DPStAlt, DFinishIsBelowSt : double;
   
   i,j,k, CountFixes, HHF, center, Vleft, Vright, Vresult, item  : integer;
-  PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed : Integer;
+  PevWaitTime,PEVStartWindow,AllUserWrng, PilotStartInterval, PilotStartTime, PilotPEVStartTime,StartTimeBuffer,MaxStartSpeed,MaxStartSpeed2 : Integer;
   AAT : boolean;
   Auto_Hcaps_on, StartFixFound : boolean;
   
@@ -207,8 +207,8 @@ begin
   StartTimeBuffer:=30; // Start time buffer zone. if one starts 30 seconds too early he is scored by his actual start time
   PEVWaitTime := Trunc(ReadDayTagParameter('PEVWAITTIME',0)) * 60;	// WaitTime in seconds 
   PEVStartWindow := Trunc(ReadDayTagParameter('PEVSTARTWINDOW',0))* 60; // StartWindow open in seconds
-  //MaxStartSpeed := Trunc(ReadDayTagParameter('MAXSTSPD',0));		// Startspeed interpolation done if MaxStartSpeed (in km/h) >0
-  AllUserWrng := Trunc(ReadDayTagParameter('ALLUSERWRNG',1));		// Output of All UserWarnings with PEVs: ON=1(for debugging and testing) OFF=0  
+  MaxStartSpeed2 := Trunc(ReadDayTagParameter('MAXSTSPD2',0));		// Startspeed interpolation done if MaxStartSpeed2 (in km/h) >0
+  AllUserWrng := Trunc(ReadDayTagParameter('ALLUSERWRNG',0));		// Output of All UserWarnings with PEVs: ON=1(for debugging and testing) OFF=0  
 
   // if DayTag variables PEVWaitTime and PEVStartWindow are set (>0) then PEV Marker Start Warnings are shown 
   if (PEVWaitTime > 0) and (PEVStartWindow> 0) then																					// Only display number of intervals if it is not zero
@@ -284,10 +284,6 @@ begin
     Vresult:= 0;
 	  if (Pilots[i].start <> -1) and (Pilots[i].finish <> -1) Then
 	    begin
-	      //CountFixes := GetArrayLength(Pilots[i].Fixes);
-        //HHF := CountFixes;
-        //StartFixFound := true;
-
         // binary searches Begin
         begin
           item := Trunc(Pilots[i].start);
@@ -329,18 +325,6 @@ begin
 
             end;
         end;
-        //If Vresult = 0 then
-          //begin
-            //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Vresult = 0' + ' CN = ' + Pilots[i].CompID;
-          //end;  
-        //If Vresult = 1 then
-         //begin
-           //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start found!' + ' CN = ' + Pilots[i].CompID;
-         //end;  
-        //If Vresult = 2 then
-         //begin
-           //Pilots[i].Warning := Pilots[i].Warning  + #13 + 'Start not found! Calculated average values from the fix before and after the start.' + ' CN = ' + Pilots[i].CompID;
-         //end;  
         // binary searches End
     
      DStSpd := 0;
@@ -356,19 +340,19 @@ begin
      if DStSpd > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + Int(DStspd * PStSpd);
-         Pilots[i].Warning := Pilots[i].Warning  + 'Start speed higher by ' + FormatFloat('# ###.00',DStSpd) + 'km/h, penalty seconds = ' + FormatFloat('# ###',DStspd * PStSpd) + '; ';
+         Pilots[i].Warning := Pilots[i].Warning  + 'Start speed higher by ' + FormatFloat('# ##0.00',DStSpd) + ' km/h, penalty seconds = ' + FormatFloat('# ##0',DStspd * PStSpd) + '; ';
        end;
     
      if DPStAlt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + DPStAlt * PStAlt;
-         Pilots[i].Warning := Pilots[i].Warning  + ' Start height exceeded by ' + FormatFloat('# ###',DPStAlt) + 'm, penalty seconds = ' + FormatFloat('# ###',DPStAlt * PStAlt) + '; ';
+         Pilots[i].Warning := Pilots[i].Warning  + ' Start height exceeded by ' + FormatFloat('# ##0',DPStAlt) + ' m, penalty seconds = ' + FormatFloat('# ##0',DPStAlt * PStAlt) + '; ';
        end;  
      
      if DFinishIsBelowSt > 0 then
        begin
          Pilots[i].finish := Pilots[i].finish + Int(DFinishIsBelowSt * PFinishIsBelowSt);
-         Pilots[i].Warning := Pilots[i].Warning  + ' Altitude loss between departure and arrival exceeded by ' + FormatFloat('# ###',DFinishIsBelowSt) + 'm, penalty seconds = ' + FormatFloat('# ###',DFinishIsBelowSt * PFinishIsBelowSt) + '; ';
+         Pilots[i].Warning := Pilots[i].Warning  + ' Altitude loss between departure and arrival exceeded by ' + FormatFloat('# ##0',DFinishIsBelowSt) + ' m, penalty seconds = ' + FormatFloat('# ##0',DFinishIsBelowSt * PFinishIsBelowSt) + '; ';
        end;   
 
      if (DStSpd > 0) or (DPStAlt > 0) or (DFinishIsBelowSt > 0) then
@@ -544,7 +528,7 @@ end;
 
   for i:=0 to GetArrayLength(Pilots)-1 do
   begin
-    Pilots[i].Warning := Pilots[i].Warning + #13; 
+    //Pilots[i].Warning := ''; 
     if (Pilots[i].start > 0) Then
     begin	
       if (PEVWaitTime>0) and (PEVStartWindow>0) then   
@@ -576,14 +560,41 @@ end;
           else
             if (Pilots[i].start>=Task.NoStartBeforeTime) and (AllUserWrng>=1) Then
               PEVWarning:=PevWarning+' Start='+GetTimestring(Trunc(Pilots[i].Start))+' OK'+', '; 
-          Pilots[i].Warning:= Pilots[i].Warning + #13 + PevWarning;
+          Pilots[i].Warning:= PevWarning;
         end
         else
            PEVWarning:='PEV not found!'+', ';
 
-        Pilots[i].Warning:= Pilots[i].Warning + #13 +PevWarning;   
+        Pilots[i].Warning:= PevWarning;   
       end;
       if Pilots[i].start<Task.NoStartBeforeTime then Pilots[i].Warning :=Pilots[i].Warning+' Start='+GetTimestring(Trunc(Pilots[i].start))+' before gate opens!'+', ';     
     end;
   end;
+
+// +/- 10 sec start speed interpolation if variable MaxStartSpeed2 is set by daytag "MaxStSpd2= " to values >0
+  if MaxStartSpeed2>0 Then 
+  for i:=0 to GetArrayLength(Pilots)-1 do
+  begin
+    PilotStartSpeed := 0;
+	PilotStartSpeedSum := 0;
+	PilotStartSpeedFixes := 0;	
+	if (Pilots[i].start > 0) Then
+	begin
+    if (GetArrayLength(Pilots[i].Fixes)-1) < 0 then Exit;
+	  for j := 0 to GetArrayLength(Pilots[i].Fixes)-1 do
+	  begin
+	    if (Pilots[i].Fixes[j].Tsec >= Pilots[i].start-9) and (Pilots[i].Fixes[j].Tsec <= Pilots[i].start+10) Then
+		begin
+		  PilotStartSpeedSum := PilotStartSpeedSum + Pilots[i].Fixes[j].Gsp;
+		  PilotStartSpeedFixes := PilotStartSpeedFixes + 1;
+	    end;
+	  end;
+
+      if PilotStartSpeedfixes>0 then 
+	    PilotStartSpeed := PilotStartSpeedSum / PilotStartSpeedFixes;
+      if (Round(PilotStartSpeed*3.6) > MaxStartSpeed2) Then
+	    Pilots[i].Warning := Pilots[i].Warning+ ' Startspeed=' + FloatToStr(Round(PilotStartSpeed*3.6)) + ' km/h-> ' + FloatToStr(Round(PilotStartSpeed*3.6)- MaxStartSpeed2) + ' km/h too fast' ;
+    end;
+  end;
+
 end.
