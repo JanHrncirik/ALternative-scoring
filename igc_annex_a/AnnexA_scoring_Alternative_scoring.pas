@@ -1,4 +1,5 @@
 Program IGC_Annex_A_scoring_2023_with_penalty;
+//Final version December 30, 2022 by Jan Hrncirik
 // Version 10.00 Date December 8, 2022 by Jan Hrncirik;
 // 
 //   .Alternative Scoring – Gliding, FOR NATIONAL, CONTINENTAL, AND WORLD GLIDING CHAMPIONSHIPS CLASS D (gliders) Including Class DM (motorgliders). 7 February 2022
